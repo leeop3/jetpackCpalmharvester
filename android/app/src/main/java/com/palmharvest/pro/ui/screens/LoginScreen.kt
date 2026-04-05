@@ -25,8 +25,8 @@ import com.palmharvest.pro.ui.theme.*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
-    onLogin: (String, String) => Unit,
-    onRegister: (String, String, String) => Unit
+    onLogin: (String, String) -> Unit,
+    onRegister: (String, String, String) -> Unit
 ) {
     var isRegistering by remember { mutableStateOf(false) }
     var email by remember { mutableStateOf("") }
@@ -130,7 +130,7 @@ fun LoginScreen(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp),
                         leadingIcon = { Icon(Icons.Default.Email, contentDescription = null, tint = Gray400) },
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                        colors = OutlinedTextFieldDefaults.colors(
                             focusedBorderColor = Primary600,
                             unfocusedBorderColor = Gray200
                         )

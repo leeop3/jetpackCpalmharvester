@@ -1,14 +1,19 @@
 package com.palmharvest.pro.ui.screens
 
+import com.palmharvest.pro.RNSService
+import com.palmharvest.pro.RNSStatus
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,6 +30,11 @@ fun RNSScreen(
     onBack: () -> Unit = {}
 ) {
     val rnsStatus by rnsService.status.collectAsState()
+    val isConnected = rnsStatus.isConnected
+    val isRnsRunning = rnsStatus.isRnsRunning
+    val localHash = rnsStatus.localHash
+    val deviceName = rnsStatus.deviceName
+    
     var isSyncing by remember { mutableStateOf(false) }
     var syncProgress by remember { mutableStateOf(0) }
 
@@ -205,7 +215,7 @@ fun RNSScreen(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp),
                         textStyle = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                        colors = OutlinedTextFieldDefaults.colors(
                             focusedBorderColor = Primary600,
                             unfocusedBorderColor = Gray100
                         )
@@ -263,7 +273,7 @@ fun RNSScreen(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp),
                         leadingIcon = { Icon(Icons.Default.Send, contentDescription = null, tint = Gray400, modifier = Modifier.size(20.dp)) },
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                        colors = OutlinedTextFieldDefaults.colors(
                             focusedBorderColor = Primary600,
                             unfocusedBorderColor = Gray100
                         )
