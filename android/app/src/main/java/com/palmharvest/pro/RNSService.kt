@@ -2,6 +2,7 @@ package com.palmharvest.pro
 
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothSocket
 import android.content.Context
 import android.os.Handler
@@ -44,7 +45,8 @@ class RNSService(private val context: Context) {
     }
 
     fun getPairedDevices(): List<Pair<String, String>> {
-        val adapter = BluetoothAdapter.getDefaultAdapter()
+        val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+        val adapter = bluetoothManager.adapter
         return if (adapter != null && adapter.isEnabled) {
             adapter.bondedDevices.map { it.name to it.address }
         } else {
@@ -68,7 +70,8 @@ class RNSService(private val context: Context) {
     fun connectRNode(address: String) {
         thread {
             try {
-                val adapter = BluetoothAdapter.getDefaultAdapter()
+                val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+                val adapter = bluetoothManager.adapter
                 if (adapter == null) {
                     showToast("Bluetooth not supported on this device")
                     return@thread
