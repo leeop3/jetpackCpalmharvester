@@ -24,6 +24,16 @@ allprojects {
     }
 }
 
+subprojects {
+    afterEvaluate { project ->
+        if (project.name == 'capacitor-bluetooth-serial') {
+            project.android {
+                namespace "com.bluetoothserial.plugin.capacitorbluetoothserial"
+            }
+        }
+    }
+}
+
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
