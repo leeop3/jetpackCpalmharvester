@@ -48,7 +48,7 @@ fun EntryScreen(
                     .background(White)
                     .padding(4.dp)
             ) {
-                Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = Gray600)
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Gray600)
             }
             Spacer(modifier = Modifier.width(16.dp))
             Column {

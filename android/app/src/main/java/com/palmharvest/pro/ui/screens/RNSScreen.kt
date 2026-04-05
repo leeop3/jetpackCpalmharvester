@@ -60,7 +60,7 @@ fun RNSScreen(
                     .background(White)
                     .padding(4.dp)
             ) {
-                Icon(Icons.Default.ArrowBack, contentDescription = "Back", tint = Gray600)
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Gray600)
             }
             Spacer(modifier = Modifier.width(16.dp))
             Column {
@@ -139,7 +139,7 @@ fun RNSScreen(
 
                 if (rnsStatus.isConnected) {
                     Spacer(modifier = Modifier.height(24.dp))
-                    Divider(color = Gray100)
+                    HorizontalDivider(color = Gray100)
                     Spacer(modifier = Modifier.height(24.dp))
                     
                     Row(
@@ -277,7 +277,7 @@ fun RNSScreen(
                         placeholder = { Text("e.g. 8b4f2c...", style = MaterialTheme.typography.labelLarge, color = Gray300) },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp),
-                        leadingIcon = { Icon(Icons.Default.Send, contentDescription = null, tint = Gray400, modifier = Modifier.size(20.dp)) },
+                        leadingIcon = { Icon(Icons.AutoMirrored.Filled.Send, contentDescription = null, tint = Gray400, modifier = Modifier.size(20.dp)) },
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedBorderColor = Primary600,
                             unfocusedBorderColor = Gray100

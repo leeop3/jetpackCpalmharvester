@@ -146,7 +146,7 @@ fun Header(
                     Icon(Icons.Default.Settings, contentDescription = "Settings", tint = Gray500)
                 }
                 IconButton(onClick = onLogout) {
-                    Icon(Icons.Default.Logout, contentDescription = "Logout", tint = Gray500)
+                    Icon(Icons.AutoMirrored.Filled.Logout, contentDescription = "Logout", tint = Gray500)
                 }
             }
         }

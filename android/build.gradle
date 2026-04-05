@@ -26,6 +26,14 @@ allprojects {
 
 subprojects {
     afterEvaluate { project ->
+        if (project.hasProperty('android')) {
+            project.android {
+                compileSdk 36
+                defaultConfig {
+                    targetSdk 36
+                }
+            }
+        }
         if (project.name == 'capacitor-bluetooth-serial') {
             project.android {
                 namespace "com.bluetoothserial.plugin.capacitorbluetoothserial"

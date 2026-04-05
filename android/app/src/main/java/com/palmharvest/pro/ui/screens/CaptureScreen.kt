@@ -107,7 +107,7 @@ fun CaptureScreen(
                         bunches = (it + 1) * 12,
                         time = "10:2${it} AM"
                     )
-                    if (it < 2) Divider(modifier = Modifier.padding(vertical = 12.dp), color = Gray100)
+                    if (it < 2) HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp), color = Gray100)
                 }
             }
         }
