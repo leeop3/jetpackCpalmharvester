@@ -37,6 +37,8 @@ fun RNSScreen(
     
     var isSyncing by remember { mutableStateOf(false) }
     var syncProgress by remember { mutableStateOf(0) }
+    var showDevicePicker by remember { mutableStateOf(false) }
+    val pairedDevices = remember { mutableStateListOf<Pair<String, String>>() }
 
     Column(
         modifier = Modifier
@@ -116,8 +118,11 @@ fun RNSScreen(
                     Button(
                         onClick = { 
                             if (!rnsStatus.isConnected) {
-                                // Mock address for demonstration, in real app would use a picker
-                                rnsService.connectRNode("00:11:22:33:44:55")
+                                pairedDevices.clear()
+                                pairedDevices.addAll(rnsService.getPairedDevices())
+                                showDevicePicker = true
+                            } else {
+                                rnsService.disconnectRNode()
                             }
                         },
                         modifier = Modifier.height(40.dp),
@@ -252,7 +257,7 @@ fun RNSScreen(
                         shape = RoundedCornerShape(12.dp),
                         color = Color(0xFFEFF6FF)
                     ) {
-                        Icon(Icons.Default.Zap, contentDescription = null, tint = Color(0xFF2563EB), modifier = Modifier.padding(8.dp))
+                        Icon(Icons.Default.Bolt, contentDescription = null, tint = Color(0xFF2563EB), modifier = Modifier.padding(8.dp))
                     }
                     Spacer(modifier = Modifier.width(12.dp))
                     Column {
@@ -290,7 +295,7 @@ fun RNSScreen(
                         enabled = rnsStatus.isRnsRunning,
                         border = androidx.compose.foundation.BorderStroke(1.dp, Gray100)
                     ) {
-                        Icon(Icons.Default.Activity, contentDescription = null, modifier = Modifier.size(16.dp))
+                        Icon(Icons.Default.History, contentDescription = null, modifier = Modifier.size(16.dp))
                         Spacer(modifier = Modifier.width(8.dp))
                         Text("Announce", style = MaterialTheme.typography.labelLarge)
                     }
@@ -304,12 +309,46 @@ fun RNSScreen(
                         enabled = rnsStatus.isRnsRunning && !isSyncing,
                         colors = ButtonDefaults.buttonColors(containerColor = Primary600)
                     ) {
-                        Icon(Icons.Default.Zap, contentDescription = null, modifier = Modifier.size(16.dp))
+                        Icon(Icons.Default.Bolt, contentDescription = null, modifier = Modifier.size(16.dp))
                         Spacer(modifier = Modifier.width(8.dp))
                         Text("Sync 12 Records", style = MaterialTheme.typography.labelLarge)
                     }
                 }
             }
         }
+    }
+
+    if (showDevicePicker) {
+        AlertDialog(
+            onDismissRequest = { showDevicePicker = false },
+            title = { Text("Select RNode Device") },
+            text = {
+                Column {
+                    if (pairedDevices.isEmpty()) {
+                        Text("No paired devices found. Pair your RNode in Bluetooth settings first.")
+                    } else {
+                        pairedDevices.forEach { (name, address) ->
+                            TextButton(
+                                onClick = {
+                                    rnsService.connectRNode(address)
+                                    showDevicePicker = false
+                                },
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Column(modifier = Modifier.fillMaxWidth()) {
+                                    Text(name, style = MaterialTheme.typography.bodyLarge)
+                                    Text(address, style = MaterialTheme.typography.labelSmall, color = Gray400)
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = { showDevicePicker = false }) {
+                    Text("Cancel")
+                }
+            }
+        )
     }
 }

@@ -4,6 +4,9 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
+import android.widget.Toast
 import com.chaquo.python.Python
 import com.chaquo.python.android.AndroidPlatform
 import java.io.InputStream
@@ -40,6 +43,15 @@ class RNSService(private val context: Context) {
         python = Python.getInstance()
     }
 
+    fun getPairedDevices(): List<Pair<String, String>> {
+        val adapter = BluetoothAdapter.getDefaultAdapter()
+        return if (adapter != null && adapter.isEnabled) {
+            adapter.bondedDevices.map { it.name to it.address }
+        } else {
+            emptyList()
+        }
+    }
+
     fun startRNS(nickname: String) {
         val storagePath = context.filesDir.absolutePath
         thread {
@@ -56,15 +68,47 @@ class RNSService(private val context: Context) {
     fun connectRNode(address: String) {
         thread {
             try {
-                val device: BluetoothDevice = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(address)
+                val adapter = BluetoothAdapter.getDefaultAdapter()
+                if (adapter == null) {
+                    showToast("Bluetooth not supported on this device")
+                    return@thread
+                }
+                if (!adapter.isEnabled) {
+                    showToast("Please enable Bluetooth")
+                    return@thread
+                }
+                
+                val device: BluetoothDevice = adapter.getRemoteDevice(address)
                 bluetoothSocket = device.createRfcommSocketToServiceRecord(MY_UUID)
                 bluetoothSocket?.connect()
                 
-                _status.value = _status.value.copy(isConnected = true, deviceName = device.name)
+                _status.value = _status.value.copy(isConnected = true, deviceName = device.name ?: "RNode")
                 startBridge()
             } catch (e: Exception) {
                 e.printStackTrace()
+                showToast("Connection failed: ${e.message}")
+                _status.value = _status.value.copy(isConnected = false)
             }
+        }
+    }
+
+    private fun showToast(message: String) {
+        Handler(Looper.getMainLooper()).post {
+            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+        }
+    }
+
+    fun disconnectRNode() {
+        try {
+            bluetoothSocket?.close()
+            bluetoothSocket = null
+            serverSocket?.close()
+            serverSocket = null
+            tcpSocket?.close()
+            tcpSocket = null
+            _status.value = _status.value.copy(isConnected = false, deviceName = "")
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 

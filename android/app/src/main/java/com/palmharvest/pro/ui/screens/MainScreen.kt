@@ -30,6 +30,10 @@ fun MainScreen(
     val context = androidx.compose.ui.platform.LocalContext.current
     val rnsService = remember { RNSService(context) }
 
+    LaunchedEffect(user) {
+        rnsService.startRNS(user)
+    }
+
     Scaffold(
         topBar = {
             Header(

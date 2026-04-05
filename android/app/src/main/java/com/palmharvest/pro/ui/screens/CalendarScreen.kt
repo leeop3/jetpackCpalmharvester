@@ -6,8 +6,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ChevronLeft
-import androidx.compose.material.icons.automirrored.filled.ChevronRight
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -62,8 +62,8 @@ fun CalendarScreen(
                 ) {
                     Text("April 2026", style = MaterialTheme.typography.headlineMedium, color = Gray900)
                     Row {
-                        IconButton(onClick = {}) { Icon(Icons.Default.ChevronLeft, contentDescription = null) }
-                        IconButton(onClick = {}) { Icon(Icons.Default.ChevronRight, contentDescription = null) }
+                        IconButton(onClick = {}) { Icon(Icons.AutoMirrored.Filled.KeyboardArrowLeft, contentDescription = null) }
+                        IconButton(onClick = {}) { Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null) }
                     }
                 }
                 

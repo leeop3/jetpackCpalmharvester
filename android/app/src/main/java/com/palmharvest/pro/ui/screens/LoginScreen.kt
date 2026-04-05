@@ -115,7 +115,7 @@ fun LoginScreen(
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(12.dp),
                             leadingIcon = { Icon(Icons.Default.Person, contentDescription = null, tint = Gray400) },
-                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                            colors = OutlinedTextFieldDefaults.colors(
                                 focusedBorderColor = Primary600,
                                 unfocusedBorderColor = Gray200
                             )
@@ -158,7 +158,7 @@ fun LoginScreen(
                             shape = RoundedCornerShape(12.dp),
                             visualTransformation = PasswordVisualTransformation(),
                             leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null, tint = Gray400) },
-                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                            colors = OutlinedTextFieldDefaults.colors(
                                 focusedBorderColor = Primary600,
                                 unfocusedBorderColor = Gray200
                             )
