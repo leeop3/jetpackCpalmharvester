@@ -1,0 +1,9 @@
+{
+  "name": "jetcompose Remix: PalmHarvest ",
+  "description": "A specialized PWA for oil palm harvesters to track collections through photo capture, bunch data entry, and geo-tagging with calendar views.",
+  "requestFramePermissions": [
+    "camera",
+    "geolocation",
+    "bluetooth"
+  ]
+}
