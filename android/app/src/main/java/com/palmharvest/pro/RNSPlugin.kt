@@ -126,11 +126,11 @@ class RNSPlugin : Plugin() {
 
     @PluginMethod
     fun injectRNode(call: PluginCall) {
-        val freq = call.getInt("frequency") ?: 868100000
+        val freq = call.getInt("frequency") ?: 433000000
         val bw = call.getInt("bandwidth") ?: 125000
-        val tx = call.getInt("txpower") ?: 7
-        val sf = call.getInt("spreadingfactor") ?: 7
-        val cr = call.getInt("codingrate") ?: 5
+        val tx = call.getInt("txpower") ?: 17
+        val sf = call.getInt("spreadingfactor") ?: 8
+        val cr = call.getInt("codingrate") ?: 6
 
         try {
             val bridge = python?.getModule("rns_bridge")

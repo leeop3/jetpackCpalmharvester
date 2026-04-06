@@ -213,11 +213,11 @@ fun RNSScreen(
                 Column(modifier = Modifier.fillMaxWidth()) {
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                         Text("Frequency (Hz)", style = MaterialTheme.typography.labelLarge, color = Gray500)
-                        Text("868.1 MHz", style = MaterialTheme.typography.labelLarge, color = Primary600, fontWeight = FontWeight.Black)
+                        Text("433.00 MHz", style = MaterialTheme.typography.labelLarge, color = Primary600, fontWeight = FontWeight.Black)
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                     OutlinedTextField(
-                        value = "868100000",
+                        value = "433000000",
                         onValueChange = {},
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp),
@@ -232,7 +232,7 @@ fun RNSScreen(
                 Spacer(modifier = Modifier.height(16.dp))
                 
                 Button(
-                    onClick = { rnsService.injectRNode(868100000, 125000, 7, 7, 5) },
+                    onClick = { rnsService.injectRNode(433000000, 125000, 17, 8, 6) },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
                     enabled = rnsStatus.isConnected,
