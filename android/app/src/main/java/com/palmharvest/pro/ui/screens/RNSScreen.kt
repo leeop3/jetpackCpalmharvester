@@ -199,18 +199,36 @@ fun RNSScreen(
             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
         ) {
             Column(modifier = Modifier.padding(24.dp)) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Surface(
-                        modifier = Modifier.size(40.dp),
-                        shape = RoundedCornerShape(12.dp),
-                        color = Color(0xFFFFF7ED)
-                    ) {
-                        Icon(Icons.Default.Settings, contentDescription = null, tint = Color(0xFFEA580C), modifier = Modifier.padding(8.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Surface(
+                            modifier = Modifier.size(40.dp),
+                            shape = RoundedCornerShape(12.dp),
+                            color = Color(0xFFFFF7ED)
+                        ) {
+                            Icon(Icons.Default.Settings, contentDescription = null, tint = Color(0xFFEA580C), modifier = Modifier.padding(8.dp))
+                        }
+                        Spacer(modifier = Modifier.width(12.dp))
+                        Column {
+                            Text("RNode Tuning", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Black)
+                            Text("LoRa Physical Layer Config", style = MaterialTheme.typography.labelMedium, color = Gray500)
+                        }
                     }
-                    Spacer(modifier = Modifier.width(12.dp))
-                    Column {
-                        Text("RNode Tuning", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Black)
-                        Text("LoRa Physical Layer Config", style = MaterialTheme.typography.labelMedium, color = Gray500)
+                    
+                    TextButton(
+                        onClick = {
+                            frequency = "433000000"
+                            bandwidth = "125000"
+                            txPower = "17"
+                            spreadingFactor = "8"
+                            codingRate = "6"
+                        }
+                    ) {
+                        Text("RESET DEFAULTS", style = MaterialTheme.typography.labelSmall, color = Primary600, fontWeight = FontWeight.Bold)
                     }
                 }
                 

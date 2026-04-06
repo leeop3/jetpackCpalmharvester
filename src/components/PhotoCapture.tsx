@@ -74,14 +74,17 @@ export default function PhotoCapture({ onCapture }: PhotoCaptureProps) {
   };
 
   const startCapture = async () => {
+    console.log('Starting photo capture. Platform:', Capacitor.getPlatform(), 'isNative:', isNative);
     // 1. Try Capacitor Camera (Native UI) - Most reliable on Android/iOS
     try {
       const hasPermission = await checkPermissions();
+      console.log('Camera permission status:', hasPermission);
       if (!hasPermission) {
         toast.error("Permission Denied", { description: "Camera permission is required to take photos." });
         return;
       }
 
+      console.log('Attempting Capacitor Camera.getPhoto...');
       const image = await Camera.getPhoto({
         quality: 90,
         allowEditing: false,
@@ -93,6 +96,7 @@ export default function PhotoCapture({ onCapture }: PhotoCaptureProps) {
       });
 
       if (image.dataUrl) {
+        console.log('Capacitor Camera success');
         handleCaptureComplete(image.dataUrl);
         return; // Success!
       }
@@ -106,6 +110,7 @@ export default function PhotoCapture({ onCapture }: PhotoCaptureProps) {
 
     // 2. Browser Fallback (only if Capacitor Camera failed or is unavailable)
     try {
+      console.log('Attempting browser camera fallback...');
       setIsCapturing(true);
       setPhotoUrl(null);
       
@@ -114,6 +119,7 @@ export default function PhotoCapture({ onCapture }: PhotoCaptureProps) {
         
         // Strategy 1: Try with ideal environment facing mode
         try {
+          console.log('Strategy 1: Environment facing mode');
           stream = await navigator.mediaDevices.getUserMedia({
             video: { 
               facingMode: { ideal: 'environment' },

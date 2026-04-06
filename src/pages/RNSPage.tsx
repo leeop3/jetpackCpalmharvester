@@ -185,14 +185,31 @@ export default function RNSPage({ records, onBack }: RNSPageProps) {
       {/* RNode Tuning */}
       <Card className="border-none shadow-lg rounded-3xl overflow-hidden bg-white">
         <CardHeader className="p-6 pb-2">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-orange-50 rounded-xl flex items-center justify-center">
-              <Settings className="w-5 h-5 text-orange-600" />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-orange-50 rounded-xl flex items-center justify-center">
+                <Settings className="w-5 h-5 text-orange-600" />
+              </div>
+              <div>
+                <CardTitle className="text-lg font-black">RNode Tuning</CardTitle>
+                <CardDescription className="text-xs font-medium">LoRa Physical Layer Config</CardDescription>
+              </div>
             </div>
-            <div>
-              <CardTitle className="text-lg font-black">RNode Tuning</CardTitle>
-              <CardDescription className="text-xs font-medium">LoRa Physical Layer Config</CardDescription>
-            </div>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={() => setConfig({
+                ...config,
+                frequency: 433000000,
+                bandwidth: 125000,
+                txPower: 17,
+                spreadingFactor: 8,
+                codingRate: 6
+              })}
+              className="text-[10px] font-black text-primary-600 hover:text-primary-700 hover:bg-primary-50"
+            >
+              RESET DEFAULTS
+            </Button>
           </div>
         </CardHeader>
         <CardContent className="p-6 space-y-6">

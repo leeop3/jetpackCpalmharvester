@@ -56,7 +56,8 @@ fun MainScreen(
         Box(modifier = Modifier.padding(paddingValues)) {
             when (currentScreen) {
                 "capture" -> CaptureScreen(
-                    onCapture = { currentScreen = "entry" }
+                    onCapture = { currentScreen = "entry" },
+                    onOpenRNS = { currentScreen = "rns" }
                 )
                 "calendar" -> CalendarScreen()
                 "settings" -> SettingsScreen(

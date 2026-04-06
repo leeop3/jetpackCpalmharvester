@@ -294,6 +294,7 @@ export default function App() {
               <CapturePage 
                 onCapture={handleCapture} 
                 onEdit={handleEdit}
+                onOpenRNS={() => setCurrentPage('rns')}
                 recentRecords={records.slice(0, 5)} 
               />
             )}

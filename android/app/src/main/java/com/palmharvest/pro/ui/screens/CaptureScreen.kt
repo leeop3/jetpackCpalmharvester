@@ -1,6 +1,9 @@
 package com.palmharvest.pro.ui.screens
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -20,21 +23,38 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import com.palmharvest.pro.ui.theme.*
 
 @Composable
 fun CaptureScreen(
-    onCapture: () -> Unit = {}
+    onCapture: () -> Unit = {},
+    onOpenRNS: () -> Unit = {}
 ) {
+    val context = LocalContext.current
     var capturedImage by remember { mutableStateOf<Bitmap?>(null) }
+    
     val cameraLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicturePreview()
     ) { bitmap ->
         if (bitmap != null) {
             capturedImage = bitmap
+        } else {
+            Toast.makeText(context, "Camera cancelled or failed", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            cameraLauncher.launch(null)
+        } else {
+            Toast.makeText(context, "Camera permission denied", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -45,12 +65,38 @@ fun CaptureScreen(
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column {
+                Text(
+                    text = "Capture Harvest",
+                    style = MaterialTheme.typography.displaySmall,
+                    color = Gray900
+                )
+                Text(
+                    text = "Start a new entry",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = Gray500
+                )
+            }
+            
+            IconButton(
+                onClick = onOpenRNS,
+                modifier = Modifier
+                    .size(48.dp)
+                    .clip(CircleShape)
+                    .background(White)
+                    .padding(4.dp)
+            ) {
+                Icon(Icons.Default.Wifi, contentDescription = "RNS Bridge", tint = Primary600)
+            }
+        }
+
         Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = "Capture Harvest",
-            style = MaterialTheme.typography.displaySmall,
-            color = Gray900
-        )
+        
         Text(
             text = "Take a photo of the harvested bunches to start a new entry",
             style = MaterialTheme.typography.bodyMedium,
@@ -118,7 +164,16 @@ fun CaptureScreen(
                         }
                         Spacer(modifier = Modifier.height(16.dp))
                         Button(
-                            onClick = { cameraLauncher.launch(null) },
+                            onClick = { 
+                                when (PackageManager.PERMISSION_GRANTED) {
+                                    ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) -> {
+                                        cameraLauncher.launch(null)
+                                    }
+                                    else -> {
+                                        permissionLauncher.launch(Manifest.permission.CAMERA)
+                                    }
+                                }
+                            },
                             shape = RoundedCornerShape(16.dp),
                             colors = ButtonDefaults.buttonColors(containerColor = Primary600)
                         ) {
