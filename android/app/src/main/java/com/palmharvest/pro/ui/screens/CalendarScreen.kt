@@ -29,6 +29,9 @@ fun CalendarScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(Gray50)
+            .statusBarsPadding()
+            .navigationBarsPadding()
+            .verticalScroll(rememberScrollState())
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -69,15 +72,51 @@ fun CalendarScreen(
                 
                 Spacer(modifier = Modifier.height(16.dp))
                 
-                // Calendar Grid Placeholder
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(240.dp)
-                        .background(Gray50, RoundedCornerShape(16.dp)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text("Calendar Grid Placeholder", style = MaterialTheme.typography.bodyMedium, color = Gray400)
+                // Calendar Grid
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                        listOf("S", "M", "T", "W", "T", "F", "S").forEach { day ->
+                            Text(
+                                text = day,
+                                modifier = Modifier.width(40.dp),
+                                style = MaterialTheme.typography.labelMedium,
+                                color = Gray400,
+                                textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                            )
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+                    
+                    val days = (1..30).toList()
+                    val rows = days.chunked(7)
+                    
+                    rows.forEach { row ->
+                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                            row.forEach { day ->
+                                Box(
+                                    modifier = Modifier
+                                        .size(40.dp)
+                                        .clip(RoundedCornerShape(8.dp))
+                                        .background(if (day == 5) Primary600 else Color.Transparent),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = "$day",
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = if (day == 5) White else Gray900,
+                                        fontWeight = if (day == 5) FontWeight.Bold else FontWeight.Normal
+                                    )
+                                }
+                            }
+                            // Fill empty slots in the last row
+                            if (row.size < 7) {
+                                repeat(7 - row.size) {
+                                    Spacer(modifier = Modifier.size(40.dp))
+                                }
+                            }
+                        }
+                        Spacer(modifier = Modifier.height(4.dp))
+                    }
                 }
             }
         }

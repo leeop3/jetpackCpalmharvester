@@ -52,6 +52,8 @@ fun RNSScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(Gray50)
+            .statusBarsPadding()
+            .navigationBarsPadding()
             .verticalScroll(rememberScrollState())
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally

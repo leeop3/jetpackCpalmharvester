@@ -28,6 +28,7 @@ fun MainScreen(
     onLogout: () -> Unit
 ) {
     var currentScreen by remember { mutableStateOf("capture") }
+    var capturedBitmap by remember { mutableStateOf<android.graphics.Bitmap?>(null) }
     val context = androidx.compose.ui.platform.LocalContext.current
     val rnsService = remember { RNSService(context) }
 
@@ -36,6 +37,10 @@ fun MainScreen(
     }
 
     Scaffold(
+        modifier = Modifier
+            .fillMaxSize()
+            .statusBarsPadding()
+            .navigationBarsPadding(),
         topBar = {
             Header(
                 user = user,
@@ -56,7 +61,10 @@ fun MainScreen(
         Box(modifier = Modifier.padding(paddingValues)) {
             when (currentScreen) {
                 "capture" -> CaptureScreen(
-                    onCapture = { currentScreen = "entry" },
+                    onCapture = { 
+                        capturedBitmap = it
+                        currentScreen = "entry" 
+                    },
                     onOpenRNS = { currentScreen = "rns" }
                 )
                 "calendar" -> CalendarScreen()
@@ -69,6 +77,7 @@ fun MainScreen(
                     onBack = { currentScreen = "settings" }
                 )
                 "entry" -> EntryScreen(
+                    photo = capturedBitmap,
                     onSave = { currentScreen = "capture" },
                     onCancel = { currentScreen = "capture" }
                 )

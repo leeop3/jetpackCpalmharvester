@@ -32,7 +32,7 @@ import com.palmharvest.pro.ui.theme.*
 
 @Composable
 fun CaptureScreen(
-    onCapture: () -> Unit = {},
+    onCapture: (Bitmap) -> Unit = {},
     onOpenRNS: () -> Unit = {}
 ) {
     val context = LocalContext.current
@@ -62,6 +62,7 @@ fun CaptureScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(Gray50)
+            .verticalScroll(rememberScrollState())
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -140,7 +141,7 @@ fun CaptureScreen(
                                 Text("RETAKE", style = MaterialTheme.typography.labelLarge)
                             }
                             Button(
-                                onClick = onCapture,
+                                onClick = { onCapture(capturedImage!!) },
                                 shape = RoundedCornerShape(16.dp),
                                 colors = ButtonDefaults.buttonColors(containerColor = Primary600)
                             ) {

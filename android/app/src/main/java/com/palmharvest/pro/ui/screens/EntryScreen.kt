@@ -23,6 +23,7 @@ import com.palmharvest.pro.ui.theme.*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EntryScreen(
+    photo: android.graphics.Bitmap? = null,
     onSave: (Int) -> Unit = {},
     onCancel: () -> Unit = {}
 ) {
@@ -102,7 +103,7 @@ fun EntryScreen(
                     }
                 }
                 
-                // Photo Placeholder
+                // Photo Placeholder or Image
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -110,7 +111,17 @@ fun EntryScreen(
                         .background(Gray100),
                     contentAlignment = Alignment.Center
                 ) {
-                    Icon(Icons.Default.Image, contentDescription = null, modifier = Modifier.size(64.dp), tint = Gray300)
+                    if (photo != null) {
+                        androidx.compose.foundation.Image(
+                            bitmap = androidx.compose.ui.graphics.asImageBitmap(photo),
+                            contentDescription = "Captured Photo",
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = androidx.compose.ui.layout.ContentScale.Crop
+                        )
+                    } else {
+                        Icon(Icons.Default.Image, contentDescription = null, modifier = Modifier.size(64.dp), tint = Gray300)
+                    }
+                    
                     Box(
                         modifier = Modifier
                             .align(Alignment.BottomEnd)
