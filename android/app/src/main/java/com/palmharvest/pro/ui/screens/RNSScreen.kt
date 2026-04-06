@@ -42,6 +42,12 @@ fun RNSScreen(
     var showDevicePicker by remember { mutableStateOf(false) }
     val pairedDevices = remember { mutableStateListOf<Pair<String, String>>() }
 
+    var frequency by remember { mutableStateOf("433000000") }
+    var bandwidth by remember { mutableStateOf("125000") }
+    var txPower by remember { mutableStateOf("17") }
+    var spreadingFactor by remember { mutableStateOf("8") }
+    var codingRate by remember { mutableStateOf("6") }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -213,12 +219,12 @@ fun RNSScreen(
                 Column(modifier = Modifier.fillMaxWidth()) {
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                         Text("Frequency (Hz)", style = MaterialTheme.typography.labelLarge, color = Gray500)
-                        Text("433.00 MHz", style = MaterialTheme.typography.labelLarge, color = Primary600, fontWeight = FontWeight.Black)
+                        Text("${(frequency.toDoubleOrNull() ?: 0.0) / 1000000.0} MHz", style = MaterialTheme.typography.labelLarge, color = Primary600, fontWeight = FontWeight.Black)
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                     OutlinedTextField(
-                        value = "433000000",
-                        onValueChange = {},
+                        value = frequency,
+                        onValueChange = { frequency = it },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp),
                         textStyle = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
@@ -230,9 +236,70 @@ fun RNSScreen(
                 }
                 
                 Spacer(modifier = Modifier.height(16.dp))
+
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text("Bandwidth (Hz)", style = MaterialTheme.typography.labelMedium, color = Gray500)
+                        Spacer(modifier = Modifier.height(4.dp))
+                        OutlinedTextField(
+                            value = bandwidth,
+                            onValueChange = { bandwidth = it },
+                            shape = RoundedCornerShape(12.dp),
+                            textStyle = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold),
+                            colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = Primary600, unfocusedBorderColor = Gray100)
+                        )
+                    }
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text("TX Power (dBm)", style = MaterialTheme.typography.labelMedium, color = Gray500)
+                        Spacer(modifier = Modifier.height(4.dp))
+                        OutlinedTextField(
+                            value = txPower,
+                            onValueChange = { txPower = it },
+                            shape = RoundedCornerShape(12.dp),
+                            textStyle = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold),
+                            colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = Primary600, unfocusedBorderColor = Gray100)
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text("Spreading Factor", style = MaterialTheme.typography.labelMedium, color = Gray500)
+                        Spacer(modifier = Modifier.height(4.dp))
+                        OutlinedTextField(
+                            value = spreadingFactor,
+                            onValueChange = { spreadingFactor = it },
+                            shape = RoundedCornerShape(12.dp),
+                            textStyle = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold),
+                            colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = Primary600, unfocusedBorderColor = Gray100)
+                        )
+                    }
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text("Coding Rate", style = MaterialTheme.typography.labelMedium, color = Gray500)
+                        Spacer(modifier = Modifier.height(4.dp))
+                        OutlinedTextField(
+                            value = codingRate,
+                            onValueChange = { codingRate = it },
+                            shape = RoundedCornerShape(12.dp),
+                            textStyle = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold),
+                            colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = Primary600, unfocusedBorderColor = Gray100)
+                        )
+                    }
+                }
+                
+                Spacer(modifier = Modifier.height(16.dp))
                 
                 Button(
-                    onClick = { rnsService.injectRNode(433000000, 125000, 17, 8, 6) },
+                    onClick = { 
+                        val f = frequency.toIntOrNull() ?: 433000000
+                        val b = bandwidth.toIntOrNull() ?: 125000
+                        val t = txPower.toIntOrNull() ?: 17
+                        val s = spreadingFactor.toIntOrNull() ?: 8
+                        val c = codingRate.toIntOrNull() ?: 6
+                        rnsService.injectRNode(f, b, t, s, c) 
+                    },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
                     enabled = rnsStatus.isConnected,

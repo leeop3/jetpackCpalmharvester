@@ -1,5 +1,9 @@
 package com.palmharvest.pro.ui.screens
 
+import android.graphics.Bitmap
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,6 +18,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -23,6 +29,15 @@ import com.palmharvest.pro.ui.theme.*
 fun CaptureScreen(
     onCapture: () -> Unit = {}
 ) {
+    var capturedImage by remember { mutableStateOf<Bitmap?>(null) }
+    val cameraLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.TakePicturePreview()
+    ) { bitmap ->
+        if (bitmap != null) {
+            capturedImage = bitmap
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -58,26 +73,57 @@ fun CaptureScreen(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Surface(
-                        modifier = Modifier.size(80.dp),
-                        shape = CircleShape,
-                        color = Primary50
+                if (capturedImage != null) {
+                    Image(
+                        bitmap = capturedImage!!.asImageBitmap(),
+                        contentDescription = "Captured Image",
+                        modifier = Modifier.fillMaxSize().clip(RoundedCornerShape(32.dp)),
+                        contentScale = ContentScale.Crop
+                    )
+                    
+                    Box(
+                        modifier = Modifier.fillMaxSize().padding(16.dp),
+                        contentAlignment = Alignment.BottomCenter
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.CameraAlt,
-                            contentDescription = null,
-                            tint = Primary600,
-                            modifier = Modifier.padding(20.dp)
-                        )
+                        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                            Button(
+                                onClick = { capturedImage = null },
+                                shape = RoundedCornerShape(16.dp),
+                                colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                            ) {
+                                Text("RETAKE", style = MaterialTheme.typography.labelLarge)
+                            }
+                            Button(
+                                onClick = onCapture,
+                                shape = RoundedCornerShape(16.dp),
+                                colors = ButtonDefaults.buttonColors(containerColor = Primary600)
+                            ) {
+                                Text("CONTINUE", style = MaterialTheme.typography.labelLarge)
+                            }
+                        }
                     }
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Button(
-                        onClick = onCapture,
-                        shape = RoundedCornerShape(16.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Primary600)
-                    ) {
-                        Text("OPEN CAMERA", style = MaterialTheme.typography.labelLarge)
+                } else {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Surface(
+                            modifier = Modifier.size(80.dp),
+                            shape = CircleShape,
+                            color = Primary50
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.CameraAlt,
+                                contentDescription = null,
+                                tint = Primary600,
+                                modifier = Modifier.padding(20.dp)
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Button(
+                            onClick = { cameraLauncher.launch(null) },
+                            shape = RoundedCornerShape(16.dp),
+                            colors = ButtonDefaults.buttonColors(containerColor = Primary600)
+                        ) {
+                            Text("OPEN CAMERA", style = MaterialTheme.typography.labelLarge)
+                        }
                     }
                 }
             }

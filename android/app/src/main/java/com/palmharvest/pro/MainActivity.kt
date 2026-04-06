@@ -67,6 +67,7 @@ class MainActivity : ComponentActivity() {
             permissions.add(Manifest.permission.BLUETOOTH)
             permissions.add(Manifest.permission.BLUETOOTH_ADMIN)
         }
+        permissions.add(Manifest.permission.CAMERA)
 
         val toRequest = permissions.filter {
             ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED

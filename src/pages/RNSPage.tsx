@@ -31,11 +31,11 @@ interface RNSPageProps {
 
 export default function RNSPage({ records, onBack }: RNSPageProps) {
   const [config, setConfig] = useState<RNSConfig>({
-    frequency: 868100000,
+    frequency: 433000000,
     bandwidth: 125000,
-    txPower: 14,
-    spreadingFactor: 7,
-    codingRate: 5,
+    txPower: 17,
+    spreadingFactor: 8,
+    codingRate: 6,
     destinationHex: '',
     nickname: localStorage.getItem('palm_harvest_user') ? JSON.parse(localStorage.getItem('palm_harvest_user')!).displayName : 'Harvester'
   });
@@ -224,6 +224,18 @@ export default function RNSPage({ records, onBack }: RNSPageProps) {
                 </select>
               </div>
               <div className="space-y-2">
+                <Label className="text-xs font-bold uppercase tracking-wider text-gray-500">TX Power (dBm)</Label>
+                <Input 
+                  type="number" 
+                  value={config.txPower}
+                  onChange={(e) => setConfig({ ...config, txPower: parseInt(e.target.value) })}
+                  className="rounded-xl border-gray-100 h-11 font-mono text-sm"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
                 <Label className="text-xs font-bold uppercase tracking-wider text-gray-500">Spreading Factor</Label>
                 <select 
                   className="w-full h-11 rounded-xl border border-gray-100 bg-white px-3 text-sm font-bold"
@@ -232,6 +244,18 @@ export default function RNSPage({ records, onBack }: RNSPageProps) {
                 >
                   {[7, 8, 9, 10, 11, 12].map(sf => (
                     <option key={sf} value={sf}>SF{sf}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="space-y-2">
+                <Label className="text-xs font-bold uppercase tracking-wider text-gray-500">Coding Rate</Label>
+                <select 
+                  className="w-full h-11 rounded-xl border border-gray-100 bg-white px-3 text-sm font-bold"
+                  value={config.codingRate}
+                  onChange={(e) => setConfig({ ...config, codingRate: parseInt(e.target.value) })}
+                >
+                  {[5, 6, 7, 8].map(cr => (
+                    <option key={cr} value={cr}>CR{cr}</option>
                   ))}
                 </select>
               </div>
